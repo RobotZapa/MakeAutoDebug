@@ -17,12 +17,12 @@ At the moment it is designed and works well on linux. It may require changes to 
 - `makedebug.py -h` (program does not run) help
 
 ## Status Codes
-- FIXED - test ran and completed successfully
-- FAILED - test ran and completed unsuccessfully
-- NO ISSUE - test was checked for and deemed not required
-- TIMEOUT - test was not detected within it's timeout
-- UNKNOWN - test status is unknown
-- ERROR - test was caught with an exception (will generate an error.log file)
+- `FIXED` - test ran and completed successfully
+- `FAILED` - test ran and completed unsuccessfully
+- `NO ISSUE` - test was checked for and deemed not required
+- `TIMEOUT` - test was not detected within it's timeout
+- `UNKNOWN` - test status is unknown
+- `ERROR` - test was caught with an exception (will generate an error.log file)
 
 # Dev Guide
 
@@ -36,7 +36,7 @@ At the moment it is designed and works well on linux. It may require changes to 
 - `DEPEND` will run before the command
 - `INSPECT` will run after the fixes complete
 - `TERMINAL` will end running all fixes terminate the program and provide the run table if return True
-- **WIP** `UNTIL` will trigger (more than once) any time it's detect criteria is met until it returns True
+- `UNTIL` will trigger (more than once) any time it's detect criteria is met until it returns True
 
 ### Keyword arguments
 
