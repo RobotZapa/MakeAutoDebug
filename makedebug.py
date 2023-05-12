@@ -44,14 +44,23 @@ class Fix:
 
     def __call__(self, func):
         def wrapper(*args, **kwargs):
-            # Do something with the function here
             self.triggered = True
-            return func(*args, **kwargs)
+            try:
+                return func(*args, **kwargs)
+            except BaseException as e:
+                with open(DEFAULT_LOG_FILENAME, 'a+') as log:
+                    log.writelines([f"ERROR in Fix {func.__name__}", traceback.format_exc(), str(e), "---"])
+                return "ERROR"
         wrapper.__doc__ = func.__doc__
         return wrapper
 
     def set_val(self, value):
-        if self.until:
+        if value == 'ERROR':
+            self.status = 'ERROR'
+            self.floating = False
+            self.triggered = True
+            self.until = False
+        elif self.until:
             if value is True:
                 self.status = 'FIXED'
                 self.triggered = True
@@ -61,7 +70,7 @@ class Fix:
                 self.triggered = False
                 self._detect = self._detect_copy[:]
             return
-        if value is True:
+        elif value is True:
             self.status = 'FIXED'
         elif value is False:
             self.status = 'FAILED'
@@ -150,7 +159,7 @@ def blocking_test(path, command):
 
 
 @Fix(ERROR, detect='error.fix not present', tell='TEST SUCCESS')
-def error_test(path, command):
+def error_status_test(path, command):
     open("error.fix", "w+").close()
     return True
 
@@ -168,6 +177,10 @@ def timeout_not_hit_test(path, command):
 @Fix(TERMINAL, detect=['READY', 'TERMINAL'], note='TEST SUCCESS')
 def terminal_test(path, command):
     return True
+
+@Fix(detect='trigger ERROR fix')
+def runtime_error_test(path, command):
+    raise RuntimeError("Test Error")
 
 
 @Fix(INSPECT, tell='TEST SUCCESS', note='TEST FAIL')
@@ -192,6 +205,14 @@ def fail_test(path, command):
 @Fix(INSPECT, warn='TEST SUCCESS', tell='TEST FAIL', note="TEST FAIL")
 def unknown_test(path, command):
     return None
+
+@Fix(INSPECT, tell='TEST SUCCESS')
+def runtime_error_detect_test(path, command):
+    if os.path.isfile(DEFAULT_LOG_FILENAME):
+        os.remove(DEFAULT_LOG_FILENAME)
+        return True
+    else:
+        return False
 
 
 #############

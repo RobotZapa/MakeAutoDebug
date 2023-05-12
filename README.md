@@ -60,3 +60,6 @@ These only apply to `DEPEND` and `INSPECT` fixes as they have no `detect` that w
 
 A terminal is good but not required. Without one, it will simply wait for timeout of all tests; however, that timeout is 
 reset by any other test running. Default timeout is set at the top of the file.
+
+There is a limitation at the moment that prevents more than one fix from being triggered by the same line of output with
+detect.

@@ -31,6 +31,8 @@ for i in range(0, 9):
     time.sleep(1)
 print("AFTER timeout.fix")
 
+print("trigger ERROR fix")
+
 print("BEFORE removing fix files")
 here = os.listdir()
 for file in here:
